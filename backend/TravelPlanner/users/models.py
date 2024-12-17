@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
-# Create your models here.
+from django.conf import settings
+
 class CustomUserManager(BaseUserManager):
     def create_user(self,email,password=None,**extra_fields):
         if not email:
@@ -26,3 +27,32 @@ class CustomUser(AbstractUser):
     
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'email'
+
+class Trip(models.Model):
+    user = models.ForeignKey(
+        # settings.AUTH_USER_MODEL, 
+        CustomUser,
+        on_delete=models.CASCADE, 
+        related_name='trips'
+    )
+    starting_date = models.DateField()
+    place = models.CharField(max_length=255)
+    number_of_days = models.PositiveIntegerField()
+    
+    def __str__(self):
+        return f"{self.user.email} - {self.place} ({self.starting_date})"
+
+class Place(models.Model):
+    trip = models.ForeignKey(
+        Trip, 
+        on_delete=models.CASCADE, 
+        related_name='places'
+    )
+    name = models.CharField(max_length=255)
+    order = models.PositiveIntegerField()
+    
+    class Meta:
+        ordering = ['order']
+    
+    def __str__(self):
+        return f"{self.name} (Order: {self.order}) - {self.trip}"

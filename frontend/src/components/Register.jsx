@@ -24,8 +24,8 @@ const Register = () => {
                     .matches(/[0-9]/,'Password must contain at least one number')
                     .matches(/[!@#$%^&*(),.?":;{}|<>+]/, 'Password must contain at least one special character'),*/
                     password2: yup.string().required('Password confirmation is a required field')
-                   .oneOf([yup.ref('password'),null], 'Passwords must match')
-
+                   .oneOf([yup.ref('password'),null], 'Passwords must match'),
+      username: yup.string()
   })  
 
   const {handleSubmit, control} = useForm({resolver: yupResolver(schema)})
@@ -33,6 +33,7 @@ const Register = () => {
   const submission = (data) => {
     AxiosInstance.post(`register/`,{
         email: data.email, 
+        username: data.username,
         password: data.password,
     })
 
@@ -52,6 +53,9 @@ const Register = () => {
           </Box>
           <Box className={"itemBox"}>
             <MyTextField label={"Email"} name={"email"} control={control}/>
+          </Box>
+          <Box className={"itemBox"}>
+            <MyTextField label={"Username"} name={"username"} control={control}/>
           </Box>
           <Box className={"itemBox"}>
             <MyPassField label={"Password"} name={"password"} control={control} />

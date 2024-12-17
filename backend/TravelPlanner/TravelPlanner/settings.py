@@ -27,8 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+from decouple import config
 
-# Application definition
+GEMINI_API_KEY = config('GEMINI_API_KEY')
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'knox',
     'corsheaders',
     'users',
+    'google'
 ]
 
 MIDDLEWARE = [
