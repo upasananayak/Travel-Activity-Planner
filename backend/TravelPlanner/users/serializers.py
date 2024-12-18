@@ -35,3 +35,5 @@ class TripSerializer(serializers.ModelSerializer):
         model = Trip
         fields = ['id', 'starting_date', 'place', 'number_of_days', 'places']
 
+# serializers.py
+
