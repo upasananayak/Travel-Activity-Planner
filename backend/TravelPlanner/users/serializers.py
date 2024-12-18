@@ -22,3 +22,16 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self,validated_data):
         user=User.objects.create_user(**validated_data)
         return user
+    
+class PlaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Place
+        fields = ['id', 'name', 'order']
+
+class TripSerializer(serializers.ModelSerializer):
+    places = PlaceSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Trip
+        fields = ['id', 'starting_date', 'place', 'number_of_days', 'places']
+

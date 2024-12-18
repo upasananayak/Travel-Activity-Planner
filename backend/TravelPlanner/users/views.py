@@ -101,3 +101,25 @@ class UserViewset(viewsets.ViewSet):
     #     except Exception as e:
     #         return Response({"error": "An unexpected error occurred: " + str(e)},
     #                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class TripViewset(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = TripSerializer
+
+    def get_queryset(self):
+        return Trip.objects.filter(user=self.request.user)
+
+# views.py
+
+# views.py
+
+class PlaceViewset(viewsets.ModelViewSet):
+    queryset = Place.objects.all()
+    serializer_class = PlaceSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        trip_id = self.request.data.get('trip_id')
+        trip = Trip.objects.get(id=trip_id, user=self.request.user)
+        serializer.save(trip=trip)
