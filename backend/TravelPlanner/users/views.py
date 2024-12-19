@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework import viewsets, permissions, status
 from .serializers import * 
 from .models import * 
@@ -104,18 +104,29 @@ class UserViewset(viewsets.ViewSet):
 
 
 class TripViewset(viewsets.ModelViewSet):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = TripSerializer
 
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            raise serializers.ValidationError("User not authenticated")
         return Trip.objects.filter(user=self.request.user)
 
 class PlaceViewset(viewsets.ModelViewSet):
-    queryset = Place.objects.all()
     serializer_class = PlaceSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        return Place.objects.filter(trip__user=self.request.user)
+
     def perform_create(self, serializer):
-        trip_id = self.request.data.get('trip_id')
-        trip = Trip.objects.get(id=trip_id, user=self.request.user)
-        serializer.save(trip=trip)
+        trip_id = self.request.data.get('trip')
+        trip = Trip.objects.filter(id=trip_id, user=self.request.user).first()
+
+        if not trip:
+            raise PermissionDenied("You don't have permission to add a place to this trip.")
+
+        # Automatically calculate the next order value
+        next_order = Place.objects.filter(trip=trip).count() + 1
+
+        serializer.save(trip=trip, order=next_order, visited=False)

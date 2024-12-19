@@ -24,14 +24,18 @@ const Trip = () => {
 
     return (
         <Box className="myBackground">
-            <Box className="centeredContent" sx={{ flexDirection: 'column', gap: 2 }}>
+            <Box className="centeredContent">
+                <div className="title">Trip List</div>
                 {trips.map(trip => (
-                    <Box key={trip.id} sx={{ marginBottom: '16px' }}>
-                        <div>{trip.place} - {trip.starting_date}</div>
+                    <Box key={trip.id} className="tripBox">
+                        <div className="tripDetails">
+                            <div>{trip.place} - {trip.starting_date}</div>
+                        </div>
                         <Button
                             variant="contained"
                             color="primary"
                             onClick={() => handleViewPlaces(trip.id)}
+                            className="viewButton"
                         >
                             View Places
                         </Button>

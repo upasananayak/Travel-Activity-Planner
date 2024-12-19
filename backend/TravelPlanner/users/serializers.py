@@ -27,6 +27,9 @@ class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Place
         fields = ['id', 'name', 'order', 'visited', 'trip']
+        extra_kwargs = {
+            'order': {'required': False},
+        }
 
 class TripSerializer(serializers.ModelSerializer):
     places = PlaceSerializer(many=True, read_only=True)

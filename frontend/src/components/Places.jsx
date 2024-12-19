@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
+import { Box, Button, TextField, Checkbox, FormControlLabel, Typography } from '@mui/material';
 import AxiosInstance from './AxiosInstance';
 import { useParams } from 'react-router-dom';
 import '../App.css';
@@ -24,7 +24,7 @@ const Places = () => {
     };
 
     const handleAddPlace = () => {
-        AxiosInstance.post('api/places/', { name: newPlace, trip_id: tripId })
+        AxiosInstance.post('api/places/', { name: newPlace, trip: tripId })
             .then(() => {
                 setNewPlace('');
                 fetchPlaces();
@@ -56,29 +56,35 @@ const Places = () => {
 
     return (
         <Box className="myBackground">
-            <Box className="centeredContent" sx={{ flexDirection: 'column', gap: 2 }}>
+            <Box className="centeredContent">
+                <Typography variant="h4" gutterBottom>
+                    Places in my Trip
+                </Typography>
                 {places.map(place => (
-                    <Box key={place.id} sx={{ marginBottom: '16px' }}>
-                        <div>{place.name}</div>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={place.visited}
-                                    onChange={() => handleToggleVisited(place.id, place.visited)}
-                                />
-                            }
-                            label="Visited"
-                        />
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => handleRemovePlace(place.id)}
-                        >
-                            Remove
-                        </Button>
+                    <Box className="placeBox" key={place.id}>
+                        <Typography className="placeName">{place.name}</Typography>
+                        <Box className="buttonGroup">
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={place.visited}
+                                        onChange={() => handleToggleVisited(place.id, place.visited)}
+                                        className="visitedCheckbox"
+                                    />
+                                }
+                                label="Visited"
+                            />
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => handleRemovePlace(place.id)}
+                            >
+                                Remove
+                            </Button>
+                        </Box>
                     </Box>
                 ))}
-                <Box sx={{ marginTop: '16px', width: '100%' }}>
+                <Box className="textFieldContainer">
                     <TextField
                         label="New Place"
                         value={newPlace}
@@ -87,9 +93,8 @@ const Places = () => {
                     />
                     <Button
                         variant="contained"
-                        color="primary"
+                        className="addButton"
                         onClick={handleAddPlace}
-                        sx={{ marginTop: '8px' }}
                     >
                         Add Place
                     </Button>
