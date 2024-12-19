@@ -12,7 +12,12 @@ import MyMessage from './Message'
 
 const Login = () =>{
     const navigate = useNavigate()
-    const {handleSubmit, control} = useForm()
+    const {handleSubmit, control} = useForm({
+        defaultValues: {
+            email: '',
+            password: '',
+          },
+    })
     const [ShowMessage, setShowMessage] = useState(false)
 
     const submission = (data) => {
@@ -24,7 +29,7 @@ const Login = () =>{
         .then((response) => {
             console.log(response)
             localStorage.setItem('Token', response.data.token)
-            navigate(`/chat`)
+            navigate('/auth-home')
         })
         .catch((error) => {
             setShowMessage(true)

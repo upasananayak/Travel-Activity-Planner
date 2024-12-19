@@ -110,10 +110,6 @@ class TripViewset(viewsets.ModelViewSet):
     def get_queryset(self):
         return Trip.objects.filter(user=self.request.user)
 
-# views.py
-
-# views.py
-
 class PlaceViewset(viewsets.ModelViewSet):
     queryset = Place.objects.all()
     serializer_class = PlaceSerializer

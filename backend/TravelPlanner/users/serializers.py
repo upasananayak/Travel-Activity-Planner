@@ -26,7 +26,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Place
-        fields = ['id', 'name', 'order']
+        fields = ['id', 'name', 'order', 'visited', 'trip']
 
 class TripSerializer(serializers.ModelSerializer):
     places = PlaceSerializer(many=True, read_only=True)

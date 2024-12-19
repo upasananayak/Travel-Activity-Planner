@@ -3,11 +3,14 @@ import { Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
 
-const Home = () => {
+const AuthHome = () => {
   const navigate = useNavigate();
 
-  const handleButtonClick = () => {
-    navigate(`/login`);
+  const handleChatButtonClick = () => {
+    navigate('/chat');
+  };
+  const handleTripButtonClick = () => {
+    navigate('/trip');
   };
 
   return (
@@ -23,24 +26,24 @@ const Home = () => {
             backgroundColor: "#1c5996",
             "&:hover": { backgroundColor: "#144272" },
           }}
-          onClick={handleButtonClick}
+          onClick={handleChatButtonClick}
         >
-          Login
+          Build a Trip
         </Button>
-        {/* <Button
+        <Button
           variant="contained"
           color="primary"
           sx={{
             backgroundColor: "#1c5996",
             "&:hover": { backgroundColor: "#144272" },
           }}
-          onClick={handleButtonClick}
+          onClick={handleTripButtonClick}
         >
           View Your Trips
-        </Button> */}
+        </Button>
       </Box>
     </Box>
   );
 };
 
-export default Home;
+export default AuthHome;

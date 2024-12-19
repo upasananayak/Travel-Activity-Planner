@@ -50,6 +50,8 @@ class Place(models.Model):
     )
     name = models.CharField(max_length=255)
     order = models.PositiveIntegerField()
+    visited = models.BooleanField(default=False)
+
     
     class Meta:
         ordering = ['order']
