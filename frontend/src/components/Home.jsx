@@ -13,7 +13,7 @@ const Home = () => {
   return (
     <Box className="myBackground">
       <Box
-        className="centeredContent"
+        className="PlainBackground" // Use a specific class for this page
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
         <Button
@@ -27,17 +27,6 @@ const Home = () => {
         >
           Login
         </Button>
-        {/* <Button
-          variant="contained"
-          color="primary"
-          sx={{
-            backgroundColor: "#1c5996",
-            "&:hover": { backgroundColor: "#144272" },
-          }}
-          onClick={handleButtonClick}
-        >
-          View Your Trips
-        </Button> */}
       </Box>
     </Box>
   );

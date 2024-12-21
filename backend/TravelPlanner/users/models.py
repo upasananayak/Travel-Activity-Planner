@@ -38,9 +38,17 @@ class Trip(models.Model):
     starting_date = models.DateField()
     place = models.CharField(max_length=255)
     number_of_days = models.PositiveIntegerField()
+    image_url = models.URLField(
+        blank=True, 
+        null=True, 
+        default='https://www.travelturtle.world/wp-content/uploads/2024/03/6585d85934a171a9a052c170_traveling-based-on-fare-deals.jpeg'
+    )
+
     
     def __str__(self):
         return f"{self.user.email} - {self.place} ({self.starting_date})"
+
+from django.db import models
 
 class Place(models.Model):
     trip = models.ForeignKey(
@@ -51,8 +59,11 @@ class Place(models.Model):
     name = models.CharField(max_length=255)
     order = models.PositiveIntegerField()
     visited = models.BooleanField(default=False)
-
-    
+    image_url = models.URLField( 
+        blank=True, 
+        null=True, 
+        default='https://www.travelturtle.world/wp-content/uploads/2024/03/6585d85934a171a9a052c170_traveling-based-on-fare-deals.jpeg'
+    )
     class Meta:
         ordering = ['order']
     

@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from rest_framework import viewsets, permissions, status
 from .serializers import * 
@@ -7,6 +8,9 @@ from django.contrib.auth import get_user_model, authenticate
 from knox.models import AuthToken
 from rest_framework.decorators import api_view
 import google.generativeai as genai
+from .utils import fetch_image_url,fetch_image_url_for_trip
+import requests
+
 
 User = get_user_model()
 
@@ -111,6 +115,25 @@ class TripViewset(viewsets.ModelViewSet):
         if not self.request.user.is_authenticated:
             raise serializers.ValidationError("User not authenticated")
         return Trip.objects.filter(user=self.request.user)
+    def perform_create(self, serializer):
+        trip = serializer.save()
+        if trip.image_url=='https://www.travelturtle.world/wp-content/uploads/2024/03/6585d85934a171a9a052c170_traveling-based-on-fare-deals.jpeg':
+            try:
+                image_url = fetch_image_url_for_trip(trip.place)
+                trip.image_url = image_url
+                trip.save()
+            except requests.exceptions.RequestException as e:
+                print(f"Error fetching image URL for trip {trip.id}: {e}")
+
+    def perform_update(self, serializer):
+        trip = serializer.save()
+        if trip.image_url=='https://www.travelturtle.world/wp-content/uploads/2024/03/6585d85934a171a9a052c170_traveling-based-on-fare-deals.jpeg':
+            try:
+                image_url = fetch_image_url_for_trip(trip.place)
+                trip.image_url = image_url
+                trip.save()
+            except requests.exceptions.RequestException as e:
+                print(f"Error fetching image URL for trip {trip.id}: {e}")
 
 class PlaceViewset(viewsets.ModelViewSet):
     serializer_class = PlaceSerializer
@@ -129,4 +152,63 @@ class PlaceViewset(viewsets.ModelViewSet):
         # Automatically calculate the next order value
         next_order = Place.objects.filter(trip=trip).count() + 1
 
-        serializer.save(trip=trip, order=next_order, visited=False)
+        place = serializer.save(trip=trip, order=next_order, visited=False)
+
+        # Check if the image URL is the placeholder and fetch the actual image URL
+        if place.image_url == 'https://www.travelturtle.world/wp-content/uploads/2024/03/6585d85934a171a9a052c170_traveling-based-on-fare-deals.jpeg':
+            try:
+                image_url = fetch_image_url(place.name, trip.id)
+                place.image_url = image_url
+                place.save()
+            except requests.exceptions.RequestException as e:
+                print(f"Error fetching image URL for place {place.id}: {e}")
+
+    def perform_update(self, serializer):
+        place = serializer.save()
+
+        # Check if the image URL is the placeholder and fetch the actual image URL
+        if place.image_url == 'https://www.travelturtle.world/wp-content/uploads/2024/03/6585d85934a171a9a052c170_traveling-based-on-fare-deals.jpeg':
+            try:
+                image_url = fetch_image_url(place.name, place.trip.id)
+                place.image_url = image_url
+                place.save()
+            except requests.exceptions.RequestException as e:
+                print(f"Error fetching image URL for place {place.id}: {e}")
+
+
+
+@api_view(['GET'])
+def fetch_image_url_view(request):
+    place_name = request.GET.get('place_name')
+    trip_id = request.GET.get('trip_id')
+    if not place_name or not trip_id:
+        return JsonResponse({"error": "place_name and trip_id parameters are required"}, status=400)
+    print(f"place_name: {place_name}, trip_id: {trip_id}")
+    place_name = request.query_params.get('place_name')
+    trip_id = request.query_params.get('trip_id')
+    if not place_name or not trip_id:
+        return Response({'error': 'place_name and trip_id parameters are required'}, status=400)
+    try:
+        image_url = fetch_image_url(place_name, trip_id)
+        return Response({'image_url': image_url})
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 429:
+            return Response({'error': 'Rate limit exceeded. Please try again later.'}, status=429)
+        return Response({'error': str(e)}, status=500)
+    except requests.exceptions.RequestException as e:
+        return Response({'error': str(e)}, status=500)
+
+@api_view(['GET'])
+def fetch_image_url_for_trip_view(request):
+    place = request.query_params.get('place')
+    if not place:
+        return Response({'error': 'place parameter is required'}, status=400)
+    try:
+        image_url = fetch_image_url_for_trip(place)
+        return Response({'image_url': image_url})
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 429:
+            return Response({'error': 'Rate limit exceeded. Please try again later.'}, status=429)
+        return Response({'error': str(e)}, status=500)
+    except requests.exceptions.RequestException as e:
+        return Response({'error': str(e)}, status=500)

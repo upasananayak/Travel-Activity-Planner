@@ -16,7 +16,7 @@ const AuthHome = () => {
   return (
     <Box className="myBackground">
       <Box
-        className="centeredContent"
+        className="PlainBackground" // Use a specific class for this page
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
         <Button

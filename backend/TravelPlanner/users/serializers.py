@@ -23,10 +23,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         user=User.objects.create_user(**validated_data)
         return user
     
+from rest_framework import serializers
+from .models import Place
+
 class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Place
-        fields = ['id', 'name', 'order', 'visited', 'trip']
+        fields = ['id', 'name', 'order', 'visited', 'trip', 'image_url']
         extra_kwargs = {
             'order': {'required': False},
         }
@@ -36,7 +39,7 @@ class TripSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Trip
-        fields = ['id', 'starting_date', 'place', 'number_of_days', 'places']
+        fields = ['id', 'starting_date', 'place', 'number_of_days', 'places', 'image_url']
 
 # serializers.py
 

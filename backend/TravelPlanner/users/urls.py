@@ -1,8 +1,9 @@
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from .views import RegisterViewset, LoginViewset, UserViewset,TripViewset, PlaceViewset
+from .views import RegisterViewset, LoginViewset, UserViewset,TripViewset, PlaceViewset, fetch_image_url_for_trip_view
 from .TripBuild import generate_itinerary
+from .views import fetch_image_url_view
 
 # Set up the router for viewsets
 router = DefaultRouter()
@@ -17,6 +18,9 @@ router.register('places', PlaceViewset, basename='places')
 urlpatterns = [
     path('api/', include(router.urls)),
     path('generate-itinerary/', generate_itinerary, name='generate_itinerary'),  # Custom route
+    path('api/fetch-image-url/', fetch_image_url_view, name='fetch_image_url'),
+    path('api/fetch-image-url-for-trip/', fetch_image_url_for_trip_view, name='fetch_image_url_for_trip'),  # New endpoint
+    
 ]
 
 # Include the router URLs

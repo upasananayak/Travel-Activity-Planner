@@ -4,6 +4,21 @@ html, body {
   padding: 0;
 }
 
+.PlainBackground {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  height: auto; /* Adjust height as needed */
+  padding: 24px;
+  gap: 16px;
+  box-sizing: border-box;
+  background: none; /* Remove background */
+  box-shadow: none; /* Remove box shadow */
+  border-radius: 0; /* Remove border radius */
+}
 
 .myBackground {
   width: 100vw;
@@ -119,12 +134,12 @@ html, body {
 }
 
 .addButton {
-  background: #007BFF !important;
+  background: #e297db !important;
   color: white !important;
 }
 
 .addButton:hover {
-  background: #0056b3 !important;
+  background: #ec6ce0 !important;
 }
 
 .visitedCheckbox {
@@ -196,4 +211,41 @@ html, body {
   .tripBox {
     padding: 12px;
   }
+}
+
+.placeImage {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.tripImage {
+  width: 100%;
+  max-width: 400px; /* Adjust the maximum width */
+  height: 200px; /* Set a consistent height */
+  object-fit: cover; /* Crop the image to fit */
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.tripBox {
+  display: flex;
+  flex-direction: column;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  align-items: center;
+}
+
+.tripDetails {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 12px;
 }
